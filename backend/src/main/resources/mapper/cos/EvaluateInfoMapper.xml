@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.cos.dao.EvaluateInfoMapper">
+
+    <!-- 查询评价信息 -->
+    <select id="selectEvaluatePage" resultType="java.util.LinkedHashMap">
+        SELECT
+            ei.*,
+            wi.`name`,
+            wi.`image`,
+            wi.type
+        FROM
+            evaluate_info ei
+                LEFT JOIN worker_info wi ON (wi.id = ei.staff_id)
+        WHERE
+            1 = 1
+        <if test="evaluateInfo.staffName != null and evaluateInfo.staffName != ''">
+            AND wi.`name` LIKE CONCAT('%',#{evaluateInfo.staffName},'%')
+        </if>
+        <if test="evaluateInfo.type != null and evaluateInfo.type != ''">
+            AND wi.type = #{evaluateInfo.type}
+        </if>
+        <if test="evaluateInfo.year != null and evaluateInfo.year != ''">
+            AND ei.year = #{evaluateInfo.year}
+        </if>
+        <if test="evaluateInfo.quarterly != null and evaluateInfo.quarterly != ''">
+            AND ei.quarterly = #{evaluateInfo.quarterly}
+        </if>
+        ORDER BY
+            ei.create_date DESC
+    </select>
+</mapper>
